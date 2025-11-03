@@ -17,6 +17,10 @@ class InputConverter:
     def get_tensor(self) -> torch.Tensor:
         '''Returns the tensor representation of the input string.'''
         return self._tensor
+    
+    def get_vocab_size(self) -> int:
+        '''Returns the size of the vocabulary (number of unique characters).'''
+        return len(self._int_to_str_mapping)
 
     def encode(self, s: str) -> list[int]:
         '''Encodes a string into a list of integers based on character mappings.'''

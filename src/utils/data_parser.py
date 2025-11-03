@@ -23,15 +23,16 @@ class DataParser:
         torch.manual_seed(MANUAL_SEED)
         self._update_train_val(tensor_data, train_val_ratio)
 
-    def process_train(self) -> BatchBlocks:
+    def process_train(self) -> tuple[torch.Tensor, torch.Tensor]:
         '''Returns a batch of training data as context-target pairs.'''
         return self._process_batch(self.train_data)
 
-    def _process_batch(self, data: torch.Tensor) -> BatchBlocks:
+    def _process_batch(self, data: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         batch_indices = self._get_batch(data)
         x_batch = torch.stack([data[i:i+ self._block_size] for i in batch_indices])
         y_batch = torch.stack([data[i+1:i+ self._block_size + 1] for i in batch_indices])
-        return self._get_context_target(x_batch, y_batch)
+        # return self._get_context_target(x_batch, y_batch)
+        return x_batch, y_batch
 
     def _get_batch(self, data) -> torch.Tensor:
         return torch.randint(len(data) - self._block_size, (self._batch_size,))

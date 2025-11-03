@@ -1,28 +1,15 @@
 """Main module to demonstrate encoding and decoding of strings using unique characters."""
 
-from pathlib import Path
-
-from utils.data_parser import DataParser
-from utils.input_converter import InputConverter
-from utils.input_loader import InputLoader
+from model.blm import BigramLanguageModel
+from train.transformer import Transformer
 
 
 if __name__ == "__main__":
-    print(f"Current folder: {Path.cwd()}\n============================")
+    transformer = Transformer()
+    x_batch, y_batch = transformer.train_batch()
+    vocab_size = transformer.get_vocab_size()
 
-    # Parse the first text files in the default input directory
-    input_string: str = InputLoader().parse()
-    sample_data = InputConverter(input_string)
-
-    # # Test encoding and decoding
-    # ints = sample_data.encode("hii there")
-    # print(f"Encoded integer list: {ints}")
-    # decoded_result = sample_data.decode(ints)
-    # print(f"Decoded string: {decoded_result}\n")
-
-    # Display tensor representation
-    tnesor = sample_data.get_tensor()
-    print(f"Tensor representation: {tnesor.shape} {tnesor.dtype}\n{tnesor[:100]}\n")
-
-    transformer_model = DataParser(tnesor)
-    batch = transformer_model.process_train()
+    model = BigramLanguageModel(vocab_size)
+    logits, loss = model(x_batch, y_batch)
+    print(logits.shape)
+    print(loss)
