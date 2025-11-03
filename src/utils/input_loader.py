@@ -4,7 +4,7 @@ from pathlib import Path
 
 DEFAULT_INPUT_PATH = Path('../data/inputs')
 
-class InputParser:
+class InputLoader:
     '''A class to parse input data from text files in a specified directory.'''
     def __init__(
         self,
@@ -12,7 +12,7 @@ class InputParser:
     ):
         self.logger = logger # TODO: Implement leveled logging functionality
 
-    def parse(self, directory_path: Path=DEFAULT_INPUT_PATH) -> list[str]:
+    def parse(self, directory_path: Path=DEFAULT_INPUT_PATH) -> str:
         '''Parses input data from text files in the specified directory.'''
         if not directory_path.exists():
             self.logger.error("Directory %s does not exist.", directory_path)

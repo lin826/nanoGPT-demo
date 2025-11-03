@@ -2,10 +2,11 @@
 import torch
 
 
-class InputData:
+class InputConverter:
     '''A class for handling string data and converting it to and from integer representations.'''
     def __init__(self, input_str: str):
         self._input = input_str
+
         self._update_mappings()
         self._update_tensor()
 
