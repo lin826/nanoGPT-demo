@@ -1,15 +1,17 @@
 """Main module to demonstrate encoding and decoding of strings using unique characters."""
 
-from model.blm import BigramLanguageModel
-from train.transformer import Transformer
+import torch
 
+from train.transformer import Transformer
 
 if __name__ == "__main__":
     transformer = Transformer()
-    x_batch, y_batch = transformer.train_batch()
-    vocab_size = transformer.get_vocab_size()
+    for step in range(10000):
+        loss_item = transformer.train_batch()
+    print(loss_item)
 
-    model = BigramLanguageModel(vocab_size)
-    logits, loss = model(x_batch, y_batch)
-    print(logits.shape)
-    print(loss)
+    # Generate new tokens
+    idx = torch.zeros((1, 1), dtype=torch.long)
+    predictions = transformer.model.generate(idx=idx, max_new_tokens=500)
+    result_ints = predictions[0].tolist()
+    print(transformer.decode(result_ints))

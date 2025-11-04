@@ -23,7 +23,7 @@ class DataParser:
         torch.manual_seed(MANUAL_SEED)
         self._update_train_val(tensor_data, train_val_ratio)
 
-    def process_train(self) -> tuple[torch.Tensor, torch.Tensor]:
+    def sample_training_data(self) -> tuple[torch.Tensor, torch.Tensor]:
         '''Returns a batch of training data as context-target pairs.'''
         return self._process_batch(self.train_data)
 
