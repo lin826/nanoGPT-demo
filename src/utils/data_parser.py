@@ -29,6 +29,10 @@ class DataParser:
         '''Returns a batch of training data as context-target pairs.'''
         return self._process_batch(self.train_data)
 
+    def sample_validation_data(self) -> tuple[torch.Tensor, torch.Tensor]:
+        '''Returns a batch of validation data as context-target pairs.'''
+        return self._process_batch(self.val_data)
+
     def get_context_target(self, x_batch: torch.Tensor, y_batch: torch.Tensor) -> BatchBlocks:
         '''Debugging helper to get context-target pairs from a batch.'''
         return list(map(

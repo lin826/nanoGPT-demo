@@ -32,9 +32,9 @@ class BigramLanguageModel(nn.Module):
             return logits, None
 
         # reshape for loss computation
-        batch_size, block_size, count = logits.shape
+        batch_size, block_size, channels = logits.shape
         minibatch = batch_size*block_size
-        logits = logits.view(minibatch, count)
+        logits = logits.view(minibatch, channels)
         targets = targets.view(minibatch)
         # expecting the loss to be -ln(1/minibatch), why?
         loss = functional.cross_entropy(logits, targets)
@@ -47,8 +47,8 @@ class BigramLanguageModel(nn.Module):
             logits, _ = self(idx)
 
             # the last time step of the block
-            logits = logits[:, -1, :]  # (batch_size, count)
-            probs = functional.softmax(logits, dim=-1)  # (batch_size, count)
+            logits = logits[:, -1, :]  # (batch_size, channels)
+            probs = functional.softmax(logits, dim=-1)  # (batch_size, channels)
 
             # sample from the distribution
             idx_next = torch.multinomial(probs, num_samples=1)  # (batch_size, 1)

@@ -7,8 +7,11 @@ from train.transformer import Transformer
 if __name__ == "__main__":
     transformer = Transformer()
     for step in range(10000):
+        if step % 1000 == 0:
+            training_loss, validate_loss = transformer.estimate_losses()
+            print(f"Step {step:04d}: {training_loss:.4f}, {validate_loss:.4f}")
         loss_item = transformer.train_batch()
-    print(loss_item)
+    print(f"Final loss: {loss_item:.4f}")
 
     # Generate new tokens
     idx = torch.zeros((1, 1), dtype=torch.long)
