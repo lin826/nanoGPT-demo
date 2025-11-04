@@ -52,7 +52,7 @@ class Transformer:
 
     def _get_model(self, model_type: nn.Module, block_size: int, device: str) -> None:
         vocab_size = self._converter.get_vocab_size()
-        return model_type(vocab_size, block_size).to(device)
+        return model_type(vocab_size, block_size, device).to(device)
 
     def _calculate_loss(self, data_sampler: callable) -> torch.Tensor:
         x_batch, y_batch = data_sampler()
