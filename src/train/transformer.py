@@ -15,6 +15,7 @@ class Transformer:
         model_type: nn.Module = BigramLanguageModel,
         optimizer_type: torch.optim.Optimizer = torch.optim.AdamW,
         learning_rate: float = 1e-3,
+        device = 'cpu',
     ):
         input_string: str = InputLoader().parse()
         self._converter = InputConverter(input_string)
@@ -22,7 +23,7 @@ class Transformer:
         tnesor = self._converter.get_tensor()
         self._data_parser = DataParser(tnesor)
 
-        self.model = self._get_model(model_type)
+        self.model = self._get_model(model_type, device)
         self._optimizer = optimizer_type(self.model.parameters(), lr=learning_rate)
 
     def train_batch(self):
@@ -41,6 +42,6 @@ class Transformer:
         '''Decodes a list of integers back into a string.'''
         return self._converter.decode(int_list)
 
-    def _get_model(self, model_type: nn.Module) -> None:
+    def _get_model(self, model_type: nn.Module, device: str) -> None:
         vocab_size = self._converter.get_vocab_size()
-        return model_type(vocab_size)
+        return model_type(vocab_size).to(device)
