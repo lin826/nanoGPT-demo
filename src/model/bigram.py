@@ -14,11 +14,13 @@ Loss = torch.Tensor
 
 class BigramLanguageModel(nn.Module):
     '''A simple Bigram Language Model placeholder.'''
-    def __init__(self, vocab_size: int):
+    def __init__(self, vocab_size: int, block_size: int, number_of_embedding_dimensions: int = 32):
         torch.manual_seed(MANUAL_SEED)
         super().__init__()
 
-        self.token_embedding_table = nn.Embedding(vocab_size, vocab_size)
+        self.token_embedding_table = nn.Embedding(vocab_size, number_of_embedding_dimensions)
+        self.position_embedding_table = nn.Embedding(block_size, number_of_embedding_dimensions)
+        self.language_modeling_head = nn.Linear(number_of_embedding_dimensions, vocab_size)
 
     def forward(
         self,
@@ -26,7 +28,10 @@ class BigramLanguageModel(nn.Module):
         targets: Optional[torch.Tensor] = None
     ) -> tuple[Logits, Loss]:
         '''Performs a forward pass of the model.'''
-        logits = self.token_embedding_table(idx)
+        idx_position = torch.arange(idx.shape[1], device=idx.device)
+        position_embedding = self.position_embedding_table(idx_position)
+        token_embeddings = self.token_embedding_table(idx) + position_embedding
+        logits = self.language_modeling_head(token_embeddings)
 
         if targets is None:
             return logits, None

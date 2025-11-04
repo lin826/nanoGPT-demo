@@ -12,6 +12,7 @@ class Transformer:
     '''A simple Transformer model placeholder.'''
     def __init__(
         self,
+        block_size: int = 8,
         model_type: nn.Module = BigramLanguageModel,
         optimizer_type: torch.optim.Optimizer = torch.optim.AdamW,
         learning_rate: float = 1e-3,
@@ -21,9 +22,9 @@ class Transformer:
         self._converter = InputConverter(input_string)
 
         tnesor = self._converter.get_tensor()
-        self._data_parser = DataParser(tnesor)
+        self._data_parser = DataParser(tnesor, block_size=block_size, device=device)
 
-        self.model = self._get_model(model_type, device)
+        self.model = self._get_model(model_type, block_size, device)
         self._optimizer = optimizer_type(self.model.parameters(), lr=learning_rate)
 
     def train_batch(self):
@@ -49,9 +50,9 @@ class Transformer:
         self.model.train()
         return training_loss, validate_loss
 
-    def _get_model(self, model_type: nn.Module, device: str) -> None:
+    def _get_model(self, model_type: nn.Module, block_size: int, device: str) -> None:
         vocab_size = self._converter.get_vocab_size()
-        return model_type(vocab_size).to(device)
+        return model_type(vocab_size, block_size).to(device)
 
     def _calculate_loss(self, data_sampler: callable) -> torch.Tensor:
         x_batch, y_batch = data_sampler()
