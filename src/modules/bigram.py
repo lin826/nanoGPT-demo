@@ -14,6 +14,35 @@ MANUAL_SEED = 1337
 Logits = torch.Tensor
 Loss = torch.Tensor
 
+class Block(nn.Module):
+    '''A Transformer block consisting of self-attention and feed-forward layers.'''
+    def __init__(
+        self,
+        block_size: int,
+        device: str,
+        number_of_embedding_dimensions: int = 32,
+        self_attension_dimmensions: int = 4,
+    ):
+        super().__init__()
+        self.self_attension_head = MultiHeadSelfAttention(
+            num_heads=self_attension_dimmensions,
+            block_size=block_size,
+            channels=number_of_embedding_dimensions,
+            device=device,
+            head_size=number_of_embedding_dimensions // self_attension_dimmensions,
+        )
+        self.feed_forward = FeedForward(
+            input_dim=number_of_embedding_dimensions,
+            hidden_dim=number_of_embedding_dimensions,
+            device=device,
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        '''Performs a forward pass of the block.'''
+        x = self.self_attension_head.forward(x)
+        x = self.feed_forward.forward(x)
+        return x
+
 
 class BigramLanguageModel(nn.Module):
     '''A simple Bigram Language Model placeholder.'''
@@ -34,12 +63,10 @@ class BigramLanguageModel(nn.Module):
         self.position_embedding_table = nn.Embedding(block_size, number_of_embedding_dimensions)
         self.language_modeling_head = nn.Linear(number_of_embedding_dimensions, vocab_size)
 
-        self.self_attension_head = MultiHeadSelfAttention(
-            num_heads=self_attension_dimmensions,
-            block_size=self._block_size,
-            channels=number_of_embedding_dimensions,
-            device=device,
-            head_size=number_of_embedding_dimensions // self_attension_dimmensions,
+        self.blocks = nn.Sequential(
+            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
+            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
+            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
         )
         self.feed_forward = FeedForward(
             input_dim=number_of_embedding_dimensions,
@@ -55,10 +82,14 @@ class BigramLanguageModel(nn.Module):
         '''Performs a forward pass of the model.'''
         idx_position = torch.arange(idx.shape[1], device=idx.device)
         position_embedding = self.position_embedding_table(idx_position)
-        token_embeddings = self.token_embedding_table(idx) + position_embedding
-        token_embeddings = self.self_attension_head.forward(token_embeddings)
-        token_embeddings = self.feed_forward.forward(token_embeddings)
-        logits = self.language_modeling_head(token_embeddings)
+        token_embeddings = self.token_embedding_table(idx)
+        x = token_embeddings + position_embedding
+
+        # Communication
+        x = self.blocks(x)
+
+        # Computation
+        logits = self.language_modeling_head(x)
 
         if targets is None:
             return logits, None
