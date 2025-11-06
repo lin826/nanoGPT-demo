@@ -1,13 +1,13 @@
-"""Implements a single-head self-attention mechanism for use in transformer models."""
+"""Implements single-head self-attention mechanism."""
 import torch
 import torch.nn as nn
 
-class SingleHeadSelfAttention:
+from modules.self_attention.attention_base import SelfAttentionBase
+
+class SingleHeadSelfAttention(SelfAttentionBase):
     '''Implements single-head self-attention mechanism.'''
-    def __init__(self,  block_size: int, channels: int, device: str, head_size: int = 16):
-        self.channels = channels
-        self.device = device
-        self.head_size = head_size
+    def __init__(self,  block_size: int, channels: int, device: str, head_size: int):
+        super().__init__(block_size, channels, device, head_size)
         self.block_square_shape = (block_size, block_size)
         self.key = nn.Linear(channels, head_size, bias=False)
         self.query = nn.Linear(channels, head_size, bias=False)

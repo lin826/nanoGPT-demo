@@ -4,6 +4,6 @@ Reimplement nanoGPT, a local trainable and finetunable agent, into object-orient
 
 Instead of using the example `karpathy/chr_rnn/tinyshakespeare/input.txt`, this repo support multiple .txt files from the folder `input/` to be trained with.
 
-## Train
+## Transformer - model architecture
 
-## GPT
+![Figure from the attention research paper](data/images/attention_research_figure.png)

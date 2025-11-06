@@ -2,14 +2,14 @@
 import torch
 import torch.nn as nn
 
-from model.bigram import BigramLanguageModel
+from modules.bigram import BigramLanguageModel
 from utils.data_parser import DataParser
 from utils.input_converter import InputConverter
 from utils.input_loader import InputLoader
 
 
 class Transformer:
-    '''A simple Transformer model placeholder.'''
+    '''A simple Transformer model implementation.'''
     def __init__(
         self,
         block_size: int = 8,
