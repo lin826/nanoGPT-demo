@@ -36,12 +36,14 @@ class Block(nn.Module):
             hidden_dim=number_of_embedding_dimensions * 4,
             device=device,
         )
+        self.layered_norm_1 = nn.LayerNorm(number_of_embedding_dimensions).to(device)
+        self.layered_norm_2 = nn.LayerNorm(number_of_embedding_dimensions).to(device)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         '''Performs a forward pass of the block.'''
         # Residual connections by the skip connection
-        x = x + self.self_attension_head.forward(x)
-        x = x + self.feed_forward.forward(x)
+        x = x + self.self_attension_head.forward(self.layered_norm_1(x))
+        x = x + self.feed_forward.forward(self.layered_norm_2(x))
         return x
 
 
@@ -68,6 +70,7 @@ class BigramLanguageModel(nn.Module):
             Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
             Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
             Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
+            nn.LayerNorm(number_of_embedding_dimensions).to(device),
         )
         self.feed_forward = FeedForward(
             input_dim=number_of_embedding_dimensions,
