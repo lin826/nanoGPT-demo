@@ -2,10 +2,10 @@
 import torch
 import torch.nn as nn
 
-from modules.bigram import BigramLanguageModel
-from utils.data_parser import DataParser
-from utils.input_converter import InputConverter
-from utils.input_loader import InputLoader
+from src.modules.bigram import BigramLanguageModel
+from src.utils.data_parser import DataParser
+from src.utils.input_converter import InputConverter
+from src.utils.input_loader import InputLoader
 
 
 class Transformer:

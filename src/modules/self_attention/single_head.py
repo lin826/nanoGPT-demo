@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 
-from modules.self_attention.attention_base import SelfAttentionBase
+from src.modules.self_attention.attention_base import SelfAttentionBase
 
 class SingleHeadSelfAttention(SelfAttentionBase):
     '''Implements single-head self-attention mechanism.'''

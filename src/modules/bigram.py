@@ -6,8 +6,8 @@ import torch
 import torch.nn as nn
 from torch.nn import functional
 
-from modules.feed_forward import FeedForward
-from modules.self_attention.multi_head import MultiHeadSelfAttention
+from src.modules.feed_forward import FeedForward
+from src.modules.self_attention.multi_head import MultiHeadSelfAttention
 
 MANUAL_SEED = 1337
 

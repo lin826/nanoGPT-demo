@@ -2,13 +2,14 @@
 
 import torch
 
-from train.transformer import Transformer
+from src.train.transformer import Transformer
 
 BLOCK_SIZE = 8
 
 # TODO: Argparse for command line arguments
 
-if __name__ == "__main__":
+def main():
+    """Main function to demonstrate encoding and decoding of strings."""
     transformer = Transformer(block_size=BLOCK_SIZE)
     for step in range(5000):
         if step % 500 == 0:
@@ -22,3 +23,6 @@ if __name__ == "__main__":
     predictions = transformer.model.generate(idx=idx, max_new_tokens=500)
     result_ints = predictions[0].tolist()
     print(transformer.decode(result_ints))
+
+if __name__ == "__main__":
+    main()
