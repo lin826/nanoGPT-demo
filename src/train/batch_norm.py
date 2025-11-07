@@ -29,8 +29,8 @@ class BatchNorm1d:
     def __call__(self, x: torch.Tensor, training: bool = True) -> torch.Tensor:
         '''Performs a forward pass of batch normalization.'''
         if training:
-            mean = x.mean(0, keepdim=True)  # Mean over batch dimension
-            var = x.var(0, keepdim=True)  # Variance over batch dimension
+            mean = x.mean(1, keepdim=True)  # Mean over batch dimension
+            var = x.var(1, keepdim=True)  # Variance over batch dimension
         else:
             mean = self.running_mean
             var = self.running_var

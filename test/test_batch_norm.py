@@ -12,5 +12,8 @@ def test_batch_norm():
 
     print(x[:, 0].mean(), x[:, 0].std())
 
-    assert torch.isclose(x[:, 0].mean(), torch.tensor(0.0), atol=1e-7)
-    assert torch.isclose(x[:, 0].std(), torch.tensor(1.0), atol=1e-5)
+    assert torch.isclose(x[0, :].mean(), torch.tensor(0.0), atol=1e-7)
+    assert torch.isclose(x[0, :].std(), torch.tensor(1.0), atol=1e-9)
+
+if __name__ == "__main__":
+    test_batch_norm()
