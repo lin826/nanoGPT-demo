@@ -33,15 +33,6 @@ class DataParser:
         '''Returns a batch of validation data as context-target pairs.'''
         return self._process_batch(self.val_data)
 
-    # def get_context_target(self, x_batch: torch.Tensor, y_batch: torch.Tensor) -> BatchBlocks:
-    #     '''Debugging helper to get context-target pairs from a batch.'''
-    #     return list(map(
-    #         lambda i: list(map(
-    #             lambda j: (x_batch[i, :j+1], y_batch[i, j]),
-    #             range(self._block_size))),
-    #         range(self._batch_size)
-    #     ))
-
     def _process_batch(self, data: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         batch_indices = self._get_batch(data)
         x_batch = torch.stack([data[i:i+ self._block_size] for i in batch_indices])
