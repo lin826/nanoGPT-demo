@@ -6,10 +6,12 @@ from train.transformer import Transformer
 
 BLOCK_SIZE = 8
 
+# TODO: Argparse for command line arguments
+
 if __name__ == "__main__":
     transformer = Transformer(block_size=BLOCK_SIZE)
-    for step in range(10000):
-        if step % 1000 == 0:
+    for step in range(5000):
+        if step % 500 == 0:
             training_loss, validate_loss = transformer.estimate_losses()
             print(f"Step {step:04d}: {training_loss:.4f}, {validate_loss:.4f}")
         loss_item = transformer.train_batch()
