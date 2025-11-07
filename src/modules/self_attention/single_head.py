@@ -1,6 +1,7 @@
 """Implements single-head self-attention mechanism."""
+
 import torch
-import torch.nn as nn
+from torch import nn
 
 from src.modules.self_attention.attention_base import SelfAttentionBase
 

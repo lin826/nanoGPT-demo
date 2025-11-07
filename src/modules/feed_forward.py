@@ -1,6 +1,7 @@
 """A simple feed-forward neural network layer."""
+
 import torch
-import torch.nn as nn
+from torch import nn
 
 class FeedForward(nn.Module):
     '''A simple feed-forward neural network layer.'''

@@ -1,4 +1,5 @@
 """Tests for the BigramLanguageModel module."""
+
 from src.modules.bigram import BigramLanguageModel
 from src.utils.data_parser import DataParser
 from src.utils.input_converter import InputConverter

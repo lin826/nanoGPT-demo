@@ -25,7 +25,7 @@ Compile this repo as a module on the local:
 pip install -e .
 ```
 
-## Train
+## Train and Validate
 
 <!--
 [TODO] Add arg parsing 

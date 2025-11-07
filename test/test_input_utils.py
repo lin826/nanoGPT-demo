@@ -1,4 +1,5 @@
 """Tests for the InputConverter module."""
+
 import torch
 
 from src.utils.data_parser import DataParser

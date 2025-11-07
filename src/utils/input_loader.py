@@ -1,4 +1,5 @@
 """Utility module for parsing input data from text files."""
+
 import logging
 from pathlib import Path
 

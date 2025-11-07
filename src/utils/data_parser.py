@@ -1,4 +1,5 @@
 """A data parser for preparing training and validation datasets."""
+
 import torch
 
 MANUAL_SEED = 1337

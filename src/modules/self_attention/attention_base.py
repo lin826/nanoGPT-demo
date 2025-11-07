@@ -1,6 +1,7 @@
 """Base class for self-attention mechanisms."""
+
 import torch
-import torch.nn as nn
+from torch import nn
 
 class SelfAttentionBase(nn.Module):
     '''Base class for self-attention mechanisms.'''

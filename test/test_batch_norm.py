@@ -1,4 +1,5 @@
 """Unit tests for the BatchNorm1d module."""
+
 import torch
 
 from src.train.batch_norm import BatchNorm1d

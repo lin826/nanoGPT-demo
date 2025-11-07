@@ -1,6 +1,7 @@
 """A simple Transformer model implementation."""
+
 import torch
-import torch.nn as nn
+from torch import nn
 
 from src.modules.bigram import BigramLanguageModel
 from src.utils.data_parser import DataParser
@@ -13,16 +14,19 @@ class Transformer:
     def __init__(
         self,
         block_size: int = 8,
+        batch_size: int = 4,
+        learning_rate: float = 1e-3,
+        train_val_ratio: float = 0.9,
+        device = 'cpu',
         model_type: nn.Module = BigramLanguageModel,
         optimizer_type: torch.optim.Optimizer = torch.optim.AdamW,
-        learning_rate: float = 1e-3,
-        device = 'cpu',
     ):
         input_string: str = InputLoader().parse()
         self._converter = InputConverter(input_string)
 
         tnesor = self._converter.get_tensor()
-        self._data_parser = DataParser(tnesor, block_size=block_size, device=device)
+        self._data_parser = DataParser(
+            tnesor, train_val_ratio, block_size, batch_size, device)
 
         self.model = self._get_model(model_type, block_size, device)
         self._optimizer = optimizer_type(self.model.parameters(), lr=learning_rate)

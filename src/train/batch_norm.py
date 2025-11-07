@@ -1,6 +1,7 @@
 """Implements 1D Batch Normalization layer."""
+
 import torch
-import torch.nn as nn
+from torch import nn
 
 
 class BatchNorm1d:
