@@ -12,8 +12,10 @@ class MultiHeadSelfAttention(SelfAttentionBase):
         self.heads = nn.ModuleList(
             [SingleHeadSelfAttention(block_size, channels, device, head_size)] * num_heads
         )
+        self.projection = nn.Linear(channels, channels)
 
     def forward(self, x_batch: torch.Tensor) -> torch.Tensor:
         '''Computes the multi-head self-attention weighted aggregation.'''
         head_outputs = list(map(lambda head: head(x_batch), self.heads))
-        return torch.cat(head_outputs, dim=-1)
+        formatted_output = torch.cat(head_outputs, dim=-1)
+        return self.projection(formatted_output)

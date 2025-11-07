@@ -9,6 +9,7 @@ class FeedForward(nn.Module):
         self.net = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),
+            nn.Linear(hidden_dim, input_dim),  # project back to residual pathway
         ).to(device)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
