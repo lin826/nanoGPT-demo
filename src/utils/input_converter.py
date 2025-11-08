@@ -31,9 +31,9 @@ class InputConverter:
         '''Decodes a list of integers back into a string based on character mappings.'''
         return ''.join(map(self._int_to_str, int_list))
 
-    def _get_unique_chars(self) -> str:
+    def _get_unique_chars(self) -> list[str]:
         '''Returns a string of unique characters from the input text, sorted in order.'''
-        return ''.join(sorted(list(set(self._input))))
+        return sorted(list(set(self._input)))
 
     def _str_to_int(self, ch: str) -> int:
         return self._str_to_int_mapping[ch]

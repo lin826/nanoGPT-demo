@@ -35,6 +35,8 @@ class Block(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         '''Performs a forward pass of the block.'''
         # Residual connections by the skip connection
-        x = x + self.self_attension_head.forward(self.layered_norm_1(x))
-        x = x + self.feed_forward.forward(self.layered_norm_2(x))
+        # x = x + self.self_attension_head.forward(self.layered_norm_1(x))
+        # x = x + self.feed_forward.forward(self.layered_norm_2(x))
+        x = self.self_attension_head.forward(x)
+        x = self.feed_forward.forward(x)
         return x

@@ -2,8 +2,6 @@
 
 import torch
 
-MANUAL_SEED = 1337
-
 ContextTargetPair = tuple[torch.Tensor, torch.dtype]
 BatchBlocks = list[list[ContextTargetPair]]
 
@@ -17,13 +15,14 @@ class DataParser:
         block_size = 8,
         batch_size = 4,
         device = 'cpu',
+        torch_seed=1337,
     ):
         # Why do we need the batch_size and block_size the same from train to validation?
         self._block_size = block_size
         self._batch_size = batch_size
         self.device = device
 
-        torch.manual_seed(MANUAL_SEED)
+        torch.manual_seed(torch_seed)
         self._update_train_val(tensor_data, train_val_ratio)
 
     def sample_training_data(self) -> tuple[torch.Tensor, torch.Tensor]:
@@ -36,8 +35,8 @@ class DataParser:
 
     def _process_batch(self, data: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         batch_indices = self._get_batch(data)
-        x_batch = torch.stack([data[i:i+ self._block_size] for i in batch_indices])
-        y_batch = torch.stack([data[i+1:i+ self._block_size + 1] for i in batch_indices])
+        x_batch = torch.stack([data[i : i+self._block_size] for i in batch_indices])
+        y_batch = torch.stack([data[i+1 : i+self._block_size+1] for i in batch_indices])
         return x_batch.to(self.device), y_batch.to(self.device)
 
     def _get_batch(self, data) -> torch.Tensor:
