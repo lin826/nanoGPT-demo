@@ -45,12 +45,12 @@ class BigramLanguageModel(nn.Module):
         #     nn.LayerNorm(number_of_embedding_dimensions).to(device),
         # )
 
-        # self.feed_forward = FeedForward(
-        #     input_dim=number_of_embedding_dimensions,
-        #     hidden_dim=number_of_embedding_dimensions,
-        #     device=device,
-        #     dropout = 0.0,  # No dropout
-        # )
+        self.feed_forward = FeedForward(
+            input_dim=number_of_embedding_dimensions,
+            hidden_dim=number_of_embedding_dimensions,
+            device=device,
+            dropout = 0.0,  # No dropout
+        )
 
         self.language_modeling_head = nn.Linear(number_of_embedding_dimensions, vocab_size)
 
@@ -68,11 +68,9 @@ class BigramLanguageModel(nn.Module):
         x = token_embeddings + position_embedding
 
         # Communication
-        # print("--- x shape:", x.shape)
         x = self.self_attension(x)
-        # print("+++ x shape:", x.shape)
         # x = self.blocks(x)
-        # x = self.feed_forward(x)
+        x = self.feed_forward(x)
 
         # Computation
         logits = self.language_modeling_head(x)

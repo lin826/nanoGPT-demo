@@ -1,6 +1,5 @@
 """Implements single-head self-attention mechanism."""
 
-from typing import Optional
 import torch
 from torch import nn
 

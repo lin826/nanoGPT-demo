@@ -1,6 +1,7 @@
 """A data parser for preparing training and validation datasets."""
 
 import torch
+from typing_extensions import Literal
 
 ContextTargetPair = tuple[torch.Tensor, torch.dtype]
 BatchBlocks = list[list[ContextTargetPair]]
@@ -11,10 +12,10 @@ class DataParser:
     def __init__(
         self,
         tensor_data: torch.Tensor,
-        train_val_ratio = 0.9,
-        block_size = 8,
-        batch_size = 4,
-        device = 'cpu',
+        train_val_ratio: float,
+        block_size: int,
+        batch_size: int,
+        device: Literal["cpu", "cuda"],
     ):
         # Why do we need the batch_size and block_size the same from train to validation?
         self._block_size = block_size
@@ -33,6 +34,7 @@ class DataParser:
 
     def _process_batch(self, data: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         batch_indices = self._get_batch(data)
+        # How can we padding zeros in the front?
         x_batch = torch.stack([data[i : i+self._block_size] for i in batch_indices])
         y_batch = torch.stack([data[i+1 : i+self._block_size+1] for i in batch_indices])
         return x_batch.to(self.device), y_batch.to(self.device)

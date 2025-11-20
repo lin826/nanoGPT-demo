@@ -58,24 +58,25 @@ def main():
         model=model,
     )
 
-    # best_model_state = model.state_dict()
-    # min_validate_loss = float('inf')
+    best_model_state = model.state_dict()
+    min_validate_loss = float('inf')
     for step in range(MAX_ITERS):
         if step % EVAL_INTERVAL == 0:
             training_loss, validate_loss = transformer.estimate_losses()
             print(f"Step {step:04d}: {training_loss:.4f}, {validate_loss:.4f}")
-            # if validate_loss < min_validate_loss:
-            #     min_validate_loss = validate_loss
-            #     best_model_state = model.state_dict()
-        loss_item = transformer.train_batch()
-    print(f"Final loss: {loss_item:.4f}")
-    # model.load_state_dict(best_model_state)
+            if validate_loss < min_validate_loss:
+                min_validate_loss = validate_loss
+                best_model_state = model.state_dict()
+        training_loss = transformer.train_batch()
+    print(f"Last training loss: {training_loss:.4f}")
+    print(f"Min validation loss: {min_validate_loss:.4f}\n")
+    model.load_state_dict(best_model_state)
 
     # Generate new tokens
     context = torch.zeros((1, BLOCK_SIZE), dtype=torch.long, device=DEVICE)
     predictions = model.generate(idx=context, max_new_tokens=500)
     result_ints = predictions[0].tolist()
-    print(converter.decode(result_ints))
+    print(converter.decode(result_ints).strip())
 
 if __name__ == "__main__":
     main()
