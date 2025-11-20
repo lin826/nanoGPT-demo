@@ -1,5 +1,6 @@
 """Implements single-head self-attention mechanism."""
 
+from typing import Optional
 import torch
 from torch import nn
 
@@ -16,7 +17,7 @@ class SingleHeadSelfAttention(SelfAttentionBase):
         self.query = nn.Linear(channels, head_size, bias=False)
 
         # Corrected from head_size to channels as the output dimension
-        self.value = nn.Linear(channels, channels, bias=False)
+        self.value = nn.Linear(channels, head_size, bias=False)
 
         self.tril: torch.Tensor  # resolve Pylance warning
         self.register_buffer('tril', torch.tril(torch.ones(self.block_size, self.block_size)))

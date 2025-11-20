@@ -22,7 +22,6 @@ class Block(nn.Module):
             num_heads=self_attension_dimmensions,
             block_size=block_size,
             channels=number_of_embedding_dimensions,
-            device=device,
             head_size=number_of_embedding_dimensions // self_attension_dimmensions,
         )
         self.feed_forward = FeedForward(

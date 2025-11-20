@@ -16,7 +16,7 @@ TRAIN_VAL_RATIO = 0.9
 DEVICE: Literal["cpu", "cuda"] = 'cpu'
 
 NUMBER_OF_EMBEDDING_DIMENSIONS = 32
-SELF_ATTENTION_DIMENSIONS = 6
+SELF_ATTENTION_DIMENSIONS = 8  # 4 heads of 8-dimensional self-attension
 BLOCK_LAYERS = 6
 DROPOUT = 0.0
 

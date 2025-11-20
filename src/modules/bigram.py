@@ -8,7 +8,7 @@ from torch.nn import functional
 
 from src.modules.block import Block
 from src.modules.feed_forward import FeedForward
-from src.modules.self_attention.single_head import SingleHeadSelfAttention
+from src.modules.self_attention.multi_head import MultiHeadSelfAttention
 
 Logits = torch.Tensor
 Loss = torch.Tensor
@@ -20,8 +20,8 @@ class BigramLanguageModel(nn.Module):
         vocab_size: int,
         block_size: int,
         device: Literal["cpu", "cuda"],
-        number_of_embedding_dimensions: int = 32,
-        self_attension_dimmensions: int = 4,
+        number_of_embedding_dimensions: int,
+        self_attension_dimmensions: int,
     ):
         super().__init__()
 
@@ -31,26 +31,28 @@ class BigramLanguageModel(nn.Module):
         self.token_embedding_table = nn.Embedding(vocab_size, number_of_embedding_dimensions)
         self.position_embedding_table = nn.Embedding(block_size, number_of_embedding_dimensions)
 
-        self.self_attension = SingleHeadSelfAttention(
+        self.self_attension = MultiHeadSelfAttention(
             block_size,
             number_of_embedding_dimensions,
             self_attension_dimmensions,
-            dropout = 0.0,
+            dropout = 0.0,  # No dropout
         )
 
-        self.language_modeling_head = nn.Linear(number_of_embedding_dimensions, vocab_size)
-
         # self.blocks = nn.Sequential(
-        #     Block(block_size, number_of_embedding_dimensions, self_attension_dimmensions),
-        #     Block(block_size, number_of_embedding_dimensions, self_attension_dimmensions),
-        #     Block(block_size, number_of_embedding_dimensions, self_attension_dimmensions),
+        #     Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
+        #     Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
+        #     Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
         #     nn.LayerNorm(number_of_embedding_dimensions).to(device),
         # )
+
         # self.feed_forward = FeedForward(
         #     input_dim=number_of_embedding_dimensions,
-        #     hidden_dim=number_of_embedding_dimensions * 4,
+        #     hidden_dim=number_of_embedding_dimensions,
         #     device=device,
+        #     dropout = 0.0,  # No dropout
         # )
+
+        self.language_modeling_head = nn.Linear(number_of_embedding_dimensions, vocab_size)
 
     def forward(
         self,
@@ -66,8 +68,11 @@ class BigramLanguageModel(nn.Module):
         x = token_embeddings + position_embedding
 
         # Communication
+        # print("--- x shape:", x.shape)
         x = self.self_attension(x)
+        # print("+++ x shape:", x.shape)
         # x = self.blocks(x)
+        # x = self.feed_forward(x)
 
         # Computation
         logits = self.language_modeling_head(x)
