@@ -1,9 +1,12 @@
 """A simple Transformer model implementation."""
 
+from typing import Callable, Literal
 import torch
 from torch import nn
 
 from src.utils.data_parser import DataParser
+
+DataSamplerType = Callable[[], tuple[torch.Tensor, torch.Tensor]]
 
 
 class Transformer:
@@ -12,10 +15,10 @@ class Transformer:
         self,
         data_parser: DataParser,
         model: nn.Module,
-        learning_rate: float = 1e-3,
-        eval_iters: int = 200,
-        device = 'cpu',
-        optimizer_type: torch.optim.Optimizer = torch.optim.AdamW,
+        learning_rate: float,
+        eval_iters: int,
+        device: Literal["cpu", "cuda"],
+        optimizer_type=torch.optim.AdamW,
     ):
         self._data_parser = data_parser
         self._model = model.to(device)
@@ -42,12 +45,12 @@ class Transformer:
         self._model.train()
         return training_loss, validate_loss
 
-    def _calculate_loss(self, data_sampler: callable) -> torch.Tensor:
+    def _calculate_loss(self, data_sampler: DataSamplerType) -> torch.Tensor:
         x_batch, y_batch = data_sampler()
         _, loss = self._model(x_batch, y_batch)
         return loss
 
-    def _get_loss_mean(self, data_sampler: callable) -> float:
+    def _get_loss_mean(self, data_sampler: DataSamplerType) -> float:
         losses = torch.zeros(self._eval_iters)
         for k in range(self._eval_iters):
             losses[k] = self._calculate_loss(data_sampler).item()

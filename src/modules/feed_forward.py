@@ -1,11 +1,14 @@
 """A simple feed-forward neural network layer."""
 
+from typing import Literal
 import torch
 from torch import nn
 
 class FeedForward(nn.Module):
     '''A simple feed-forward neural network layer.'''
-    def __init__(self, input_dim: int, hidden_dim: int, device: str, dropout: float = 0.1):
+    def __init__(
+        self, input_dim: int, hidden_dim: int, device: Literal["cpu", "cuda"], dropout: float = 0.1
+    ):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),

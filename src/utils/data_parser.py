@@ -15,14 +15,12 @@ class DataParser:
         block_size = 8,
         batch_size = 4,
         device = 'cpu',
-        torch_seed=1337,
     ):
         # Why do we need the batch_size and block_size the same from train to validation?
         self._block_size = block_size
         self._batch_size = batch_size
         self.device = device
 
-        torch.manual_seed(torch_seed)
         self._update_train_val(tensor_data, train_val_ratio)
 
     def sample_training_data(self) -> tuple[torch.Tensor, torch.Tensor]:

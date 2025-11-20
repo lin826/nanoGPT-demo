@@ -5,6 +5,10 @@ import torch
 
 class InputConverter:
     '''A class for handling string data and converting it to and from integer representations.'''
+
+    _str_to_int_mapping: dict[str, int]
+    _int_to_str_mapping: dict[int, str]
+
     def __init__(self, input_str: str):
         self._input = input_str
 

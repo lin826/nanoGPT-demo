@@ -13,13 +13,12 @@ class MultiHeadSelfAttention(SelfAttentionBase):
         num_heads: int,
         block_size: int,
         channels: int,
-        device: str,
         head_size: int,
         dropout: float = 0.1,
     ):
-        super().__init__(block_size, channels, device, head_size)
+        super().__init__(block_size, channels, head_size)
         self.heads = nn.ModuleList(
-            [SingleHeadSelfAttention(block_size, channels, device, head_size, dropout)] * num_heads
+            [SingleHeadSelfAttention(block_size, channels, head_size, dropout)] * num_heads
         )
         self.projection = nn.Linear(channels, channels)
         self.dropout = nn.Dropout(dropout)

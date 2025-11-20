@@ -1,5 +1,6 @@
 """A Transformer block consisting of self-attention and feed-forward layers."""
 
+from typing import Literal
 import torch
 from torch import nn
 
@@ -12,7 +13,7 @@ class Block(nn.Module):
     def __init__(
         self,
         block_size: int,
-        device: str,
+        device: Literal["cpu", "cuda"],
         number_of_embedding_dimensions: int = 32,
         self_attension_dimmensions: int = 4,
     ):
