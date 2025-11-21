@@ -2,7 +2,7 @@
 
 from src.modules.bigram import BigramLanguageModel
 from src.utils.data_parser import DataParser
-from utils.input_loader import InputLoader
+from src.utils.input_loader import InputLoader
 
 def test_bigram_initialization():
     '''Tests the initialization of the BigramLanguageModel.'''

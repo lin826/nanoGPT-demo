@@ -8,16 +8,15 @@ from src.train.transformer import Transformer
 from src.utils.data_parser import DataParser
 from src.utils.input_loader import InputLoader
 
-BATCH_SIZE = 32
-BLOCK_SIZE = 8
 LEARNING_RATE = 1e-3
 TRAIN_VAL_RATIO = 0.9
 DEVICE: Literal["cpu", "cuda"] = 'cpu'
 
-# 4 heads of 8-dimensional self-attension
+BATCH_SIZE = 32
+BLOCK_SIZE = 8
 NUMBER_OF_EMBEDDING_DIMENSIONS: int = 32
-NUM_HEADS: int = 4
 SELF_ATTENTION_DIMENSIONS: int = 8
+NUM_HEADS: int = 4  # 4 heads of 8-dimensional self-attension
 
 BLOCK_LAYERS = 6
 DROPOUT = 0.0
@@ -71,8 +70,8 @@ def main():
                 min_validate_loss = validate_loss
                 best_model_state = model.state_dict()
         training_loss = transformer.train_batch()
-    print(f"Last training loss: {training_loss:.4f}")
-    print(f"Min validation loss: {min_validate_loss:.4f}\n")
+    print(f"\nLast training loss: {training_loss:.4f}")
+    print(f"Min validation loss: {min_validate_loss:.4f}\n---END OF TRAINING---\n")
     model.load_state_dict(best_model_state)
 
     # Generate new tokens

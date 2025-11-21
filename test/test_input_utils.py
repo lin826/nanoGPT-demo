@@ -3,7 +3,7 @@
 import torch
 
 from src.utils.data_parser import DataParser
-from utils.input_loader import InputLoader
+from src.utils.input_loader import InputLoader
 
 
 def test_encoding():

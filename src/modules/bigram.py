@@ -31,25 +31,11 @@ class BigramLanguageModel(nn.Module):
         self.token_embedding_table = nn.Embedding(vocab_size, number_of_embedding_dimensions)
         self.position_embedding_table = nn.Embedding(block_size, number_of_embedding_dimensions)
 
-        self.self_attension = MultiHeadSelfAttention(
-            block_size,
-            number_of_embedding_dimensions,
-            self_attension_dimmensions,
-            dropout = 0.0,  # No dropout
-        )
-
-        # self.blocks = nn.Sequential(
-        #     Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
-        #     Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
-        #     Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
-        #     nn.LayerNorm(number_of_embedding_dimensions).to(device),
-        # )
-
-        self.feed_forward = FeedForward(
-            input_dim=number_of_embedding_dimensions,
-            hidden_dim=number_of_embedding_dimensions,
-            device=device,
-            dropout = 0.0,  # No dropout
+        self.blocks = nn.Sequential(
+            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
+            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
+            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
+            # nn.LayerNorm(number_of_embedding_dimensions).to(device),
         )
 
         self.language_modeling_head = nn.Linear(number_of_embedding_dimensions, vocab_size)
@@ -68,9 +54,9 @@ class BigramLanguageModel(nn.Module):
         x = token_embeddings + position_embedding
 
         # Communication
-        x = self.self_attension(x)
-        # x = self.blocks(x)
-        x = self.feed_forward(x)
+        x = self.blocks(x)
+        # x = self.self_attension(x)
+        # x = self.feed_forward(x)
 
         # Computation
         logits = self.language_modeling_head(x)
