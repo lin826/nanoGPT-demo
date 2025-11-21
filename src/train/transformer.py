@@ -17,7 +17,7 @@ class Transformer:
         model: nn.Module,
         learning_rate: float,
         eval_iters: int,
-        device: Literal["cpu", "cuda"],
+        device: Literal["cpu", "cuda", "mps"],
         optimizer_type=torch.optim.AdamW,
     ):
         self._data_parser = data_parser

@@ -15,7 +15,7 @@ class DataParser:
         train_val_ratio: float,
         block_size: int,
         batch_size: int,
-        device: Literal["cpu", "cuda"],
+        device: Literal["cpu", "cuda", "mps"],
     ):
         # Why do we need the batch_size and block_size the same from train to validation?
         self._block_size = block_size

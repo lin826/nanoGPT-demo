@@ -7,8 +7,8 @@ from torch import nn
 from torch.nn import functional
 
 from src.modules.block import Block
-from src.modules.feed_forward import FeedForward
-from src.modules.self_attention.multi_head import MultiHeadSelfAttention
+# from src.modules.feed_forward import FeedForward
+# from src.modules.self_attention.multi_head import MultiHeadSelfAttention
 
 Logits = torch.Tensor
 Loss = torch.Tensor
@@ -19,9 +19,11 @@ class BigramLanguageModel(nn.Module):
         self,
         vocab_size: int,
         block_size: int,
-        device: Literal["cpu", "cuda"],
+        device: Literal["cpu", "cuda", "mps"],
         number_of_embedding_dimensions: int,
         self_attension_dimmensions: int,
+        n_layer: int,
+        dropout: float,
     ):
         super().__init__()
 
@@ -31,12 +33,11 @@ class BigramLanguageModel(nn.Module):
         self.token_embedding_table = nn.Embedding(vocab_size, number_of_embedding_dimensions)
         self.position_embedding_table = nn.Embedding(block_size, number_of_embedding_dimensions)
 
-        self.blocks = nn.Sequential(
-            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
-            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
-            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions),
-            # nn.LayerNorm(number_of_embedding_dimensions).to(device),
-        )
+        self.blocks = nn.Sequential(*[
+            Block(block_size, device, number_of_embedding_dimensions, self_attension_dimmensions, dropout)
+            for _ in range(n_layer)
+        ])
+        self.layer_norm = nn.LayerNorm(number_of_embedding_dimensions).to(device)
 
         self.language_modeling_head = nn.Linear(number_of_embedding_dimensions, vocab_size)
 
@@ -55,6 +56,7 @@ class BigramLanguageModel(nn.Module):
 
         # Communication
         x = self.blocks(x)
+        x = self.layer_norm(x)
         # x = self.self_attension(x)
         # x = self.feed_forward(x)
 

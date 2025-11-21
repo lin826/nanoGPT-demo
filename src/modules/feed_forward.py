@@ -7,14 +7,14 @@ from torch import nn
 class FeedForward(nn.Module):
     '''A simple feed-forward neural network layer.'''
     def __init__(
-        self, input_dim: int, hidden_dim: int, device: Literal["cpu", "cuda"], dropout: float
+        self, input_dim: int, hidden_dim: int, device: Literal["cpu", "cuda", "mps"], dropout: float
     ):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),
             nn.Linear(hidden_dim, input_dim),  # project back to residual pathway
-            # nn.Dropout(dropout),
+            nn.Dropout(dropout),
         ).to(device)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

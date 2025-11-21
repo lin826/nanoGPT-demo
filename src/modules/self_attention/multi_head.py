@@ -23,11 +23,11 @@ class MultiHeadSelfAttention(SelfAttentionBase):
             for _ in range(num_heads)
         ])
         self.projection = nn.Linear(number_of_embedding_dimensions, number_of_embedding_dimensions)
-        # self.dropout = nn.Dropout(dropout)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x_batch: torch.Tensor) -> torch.Tensor:
         '''Computes the multi-head self-attention weighted aggregation.'''
         head_outputs = list(map(lambda head: head(x_batch), self.heads))
         formatted_output = torch.cat(head_outputs, dim=-1)
-        # dropped_output = self.dropout(formatted_output)
-        return self.projection(formatted_output)
+        dropped_output = self.dropout(formatted_output)
+        return self.projection(dropped_output)

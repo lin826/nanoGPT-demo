@@ -29,16 +29,17 @@ class SingleHeadSelfAttention(SelfAttentionBase):
         queries = self.query(x_batch)  # (batch_size, block_size, head_size)
 
         # Using einsum to speed up: (B,T,C) x (B,C,T) -> (B,T,T)
-        weight = torch.einsum('bth,bsh->bts', queries, keys)
-        weight = weight * self.channels ** -0.5  # scale with normalization
+        # weight = torch.einsum('bth,bsh->bts', queries, keys) # , keys.transpose(-2, -1))
+        # weight = weight * self.channels ** -0.5  # scale with normalization
+        weight = queries @ keys.transpose(-2, -1)
+        weight = weight / (keys.shape[-1] ** 0.5)
+
         # use registered lower-triangular mask tensor directly
         scores = weight.masked_fill(self.tril == 0, float('-inf'))
-        # scores = torch.einsum('bts,bsh->bth', queries, keys.transpose(-2, -1))
-        # scores = scores / (keys.shape[-1] ** 0.5)
 
         # apply softmax to get attention weights
         weights = torch.nn.functional.softmax(scores, dim=-1)
-        # weights = self.dropout(weights)
+        weights = self.dropout(weights)
 
         # weighted sum of values: (B,T,T) x (B,T,C) -> (B,T,C)
         # Here values are the same as x_batch for simplicity
