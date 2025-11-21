@@ -6,7 +6,7 @@ import torch
 from src.modules.bigram import BigramLanguageModel
 from src.train.transformer import Transformer
 from src.utils.data_parser import DataParser
-from src.utils.input_converter import InputConverter
+from src.utils.input_loader import InputLoader
 
 BATCH_SIZE = 32
 BLOCK_SIZE = 8
@@ -35,7 +35,7 @@ def main():
     assert NUMBER_OF_EMBEDDING_DIMENSIONS == NUM_HEADS * SELF_ATTENTION_DIMENSIONS
 
     torch.manual_seed(TORCH_SEED)
-    converter = InputConverter()
+    converter = InputLoader()
 
     data_parser = DataParser(
         converter.get_input_tensor(),

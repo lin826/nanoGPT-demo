@@ -3,12 +3,12 @@
 import torch
 
 from src.utils.data_parser import DataParser
-from src.utils.input_converter import InputConverter
+from utils.input_loader import InputLoader
 
 
 def test_encoding():
     '''Tests the encoding functionality of InputConverter.'''
-    sample_data = InputConverter()
+    sample_data = InputLoader()
     ints = sample_data.encode("hii there")
 
     assert isinstance(ints, list)
@@ -16,7 +16,7 @@ def test_encoding():
 
 def test_decoding():
     '''Tests the decoding functionality of InputConverter.'''
-    sample_data = InputConverter()
+    sample_data = InputLoader()
     input_string = sample_data.get_input()
     ints = [1, 2, 3, 4, 5]
     decoded_result = sample_data.decode(ints)
@@ -26,7 +26,7 @@ def test_decoding():
 
 def test_tensor_representation():
     '''Tests the tensor representation of the input string.'''
-    sample_data = InputConverter()
+    sample_data = InputLoader()
     input_string = sample_data.get_input()
     tensor = sample_data.get_input_tensor()
 
@@ -38,7 +38,7 @@ def test_data_parser():
     '''Tests the data parser integration with InputConverter.'''
     batch_size, block_size, device = 4, 8, 'cpu'
     train_val_ratio = 0.99
-    sample_data = InputConverter()
+    sample_data = InputLoader()
     tensor = sample_data.get_input_tensor()
     transformer_model = DataParser(
         tensor, train_val_ratio, block_size, batch_size, device)

@@ -7,7 +7,7 @@ import torch
 DEFAULT_INPUT_PATH = './data/inputs/'
 
 
-class InputConverter:
+class InputLoader:
     '''A class for handling string data and converting it to and from integer representations.'''
 
     _str_to_int_mapping: dict[str, int]

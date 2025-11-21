@@ -2,12 +2,12 @@
 
 from src.modules.bigram import BigramLanguageModel
 from src.utils.data_parser import DataParser
-from src.utils.input_converter import InputConverter
+from utils.input_loader import InputLoader
 
 def test_bigram_initialization():
     '''Tests the initialization of the BigramLanguageModel.'''
     # Arrange
-    converter = InputConverter()
+    converter = InputLoader()
     tnesor = converter.get_input_tensor()
 
     batch_size, block_size, device = 32, 8, 'cpu'
