@@ -7,7 +7,6 @@ from src.modules.bigram import BigramLanguageModel
 from src.train.transformer import Transformer
 from src.utils.data_parser import DataParser
 from src.utils.input_converter import InputConverter
-from src.utils.input_loader import InputLoader
 
 BATCH_SIZE = 32
 BLOCK_SIZE = 8
@@ -15,8 +14,11 @@ LEARNING_RATE = 1e-3
 TRAIN_VAL_RATIO = 0.9
 DEVICE: Literal["cpu", "cuda"] = 'cpu'
 
-NUMBER_OF_EMBEDDING_DIMENSIONS = 32
-SELF_ATTENTION_DIMENSIONS = 8  # 4 heads of 8-dimensional self-attension
+# 4 heads of 8-dimensional self-attension
+NUMBER_OF_EMBEDDING_DIMENSIONS: int = 32
+NUM_HEADS: int = 4
+SELF_ATTENTION_DIMENSIONS: int = 8
+
 BLOCK_LAYERS = 6
 DROPOUT = 0.0
 
@@ -30,12 +32,13 @@ TORCH_SEED = 1337
 
 def main():
     """Main function to demonstrate encoding and decoding of strings."""
+    assert NUMBER_OF_EMBEDDING_DIMENSIONS == NUM_HEADS * SELF_ATTENTION_DIMENSIONS
+
     torch.manual_seed(TORCH_SEED)
-    input_string: str = InputLoader().parse()
-    converter = InputConverter(input_string)
+    converter = InputConverter()
 
     data_parser = DataParser(
-        converter.get_tensor(),
+        converter.get_input_tensor(),
         TRAIN_VAL_RATIO,
         BLOCK_SIZE,
         BATCH_SIZE,

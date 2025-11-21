@@ -4,13 +4,11 @@ import torch
 
 from src.utils.data_parser import DataParser
 from src.utils.input_converter import InputConverter
-from src.utils.input_loader import InputLoader
 
 
 def test_encoding():
     '''Tests the encoding functionality of InputConverter.'''
-    input_string: str = InputLoader().parse()
-    sample_data = InputConverter(input_string)
+    sample_data = InputConverter()
     ints = sample_data.encode("hii there")
 
     assert isinstance(ints, list)
@@ -18,8 +16,8 @@ def test_encoding():
 
 def test_decoding():
     '''Tests the decoding functionality of InputConverter.'''
-    input_string: str = InputLoader().parse()
-    sample_data = InputConverter(input_string)
+    sample_data = InputConverter()
+    input_string = sample_data.get_input()
     ints = [1, 2, 3, 4, 5]
     decoded_result = sample_data.decode(ints)
 
@@ -28,9 +26,9 @@ def test_decoding():
 
 def test_tensor_representation():
     '''Tests the tensor representation of the input string.'''
-    input_string: str = InputLoader().parse()
-    sample_data = InputConverter(input_string)
-    tensor = sample_data.get_tensor()
+    sample_data = InputConverter()
+    input_string = sample_data.get_input()
+    tensor = sample_data.get_input_tensor()
 
     assert tensor.dim() == 1
     assert tensor.dtype == torch.long
@@ -38,13 +36,12 @@ def test_tensor_representation():
 
 def test_data_parser():
     '''Tests the data parser integration with InputConverter.'''
-    batch_size = 4
-    block_size = 8
-    input_string: str = InputLoader().parse()
-    sample_data = InputConverter(input_string)
-    tensor = sample_data.get_tensor()
+    batch_size, block_size, device = 4, 8, 'cpu'
+    train_val_ratio = 0.99
+    sample_data = InputConverter()
+    tensor = sample_data.get_input_tensor()
     transformer_model = DataParser(
-        tensor, block_size=block_size, batch_size=batch_size)
+        tensor, train_val_ratio, block_size, batch_size, device)
 
     # Act: Sample training data
     x_batch, y_batch = transformer_model.sample_training_data()

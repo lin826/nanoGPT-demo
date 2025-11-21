@@ -1,6 +1,10 @@
-"""A module for data handling and conversion between string and integer representations."""
+"""Utility module for preprocessing string data into the tensor representation."""
 
+import logging
+from pathlib import Path
 import torch
+
+DEFAULT_INPUT_PATH = './data/inputs/'
 
 
 class InputConverter:
@@ -8,9 +12,15 @@ class InputConverter:
 
     _str_to_int_mapping: dict[str, int]
     _int_to_str_mapping: dict[int, str]
+    _input_tensor: torch.Tensor
 
-    def __init__(self, input_str: str):
-        self._input = input_str
+    def __init__(
+        self,
+        directory_path: Path=Path(DEFAULT_INPUT_PATH),
+        logger = logging.getLogger(__name__),
+    ):
+        self._logger = logger
+        self._input = self._load(directory_path)
 
         self._update_mappings()
         self._update_tensor()
@@ -19,9 +29,9 @@ class InputConverter:
         '''Returns the original input string.'''
         return self._input
 
-    def get_tensor(self) -> torch.Tensor:
+    def get_input_tensor(self) -> torch.Tensor:
         '''Returns the tensor representation of the input string.'''
-        return self._tensor
+        return self._input_tensor
 
     def get_vocab_size(self) -> int:
         '''Returns the size of the vocabulary (number of unique characters).'''
@@ -51,4 +61,25 @@ class InputConverter:
         self._int_to_str_mapping = { i:ch for i,ch in enumerate(unique_chars) }
 
     def _update_tensor(self) -> None:
-        self._tensor = torch.tensor(self.encode(self._input), dtype=torch.long)
+        self._input_tensor = torch.tensor(self.encode(self._input), dtype=torch.long)
+
+    def _load(self, directory_path: Path=Path(DEFAULT_INPUT_PATH)) -> str:
+        '''Load input data from text files in the specified directory.'''
+        if not directory_path.exists():
+            self._logger.error("Directory %s does not exist.", directory_path)
+            return ''
+
+        input_data = ''
+        for item in directory_path.iterdir():
+            if not item.is_file():
+                self._logger.debug("Skipping non-file item: %s", item)
+                continue
+            if item.name.startswith('_'):
+                self._logger.debug("Skipping hidden/system file: %s", item)
+                continue
+            if item.suffix != '.txt':
+                self._logger.debug("Skipping non-text file: %s", item)
+                continue
+            with item.open('r') as file:
+                input_data += file.read()
+        return input_data
