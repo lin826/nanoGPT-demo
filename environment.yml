@@ -1,0 +1,9 @@
+name: nanogpt-demo
+channels:
+  - base
+  - defaults
+dependencies:
+  - python=3.13.9=hc7d8306_100_cp313
+  - pip:
+      - torch==2.9.0
+prefix: /opt/homebrew/Caskroom/miniconda/base/envs/nanogpt

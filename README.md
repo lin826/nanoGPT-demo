@@ -12,20 +12,34 @@ Instead of using the example `karpathy/chr_rnn/tinyshakespeare/input.txt`, this 
 
 ## Getting Started
 
-Create virtual environment and install python libraries:
+Create virtual environment and install pyhton libraries.
+
+> Hint: On [the official webpage](https://www.anaconda.com/download), scroll down to find Miniconda Installers section!
+
+### Conda for System Dependencies
 
 ```sh
-uv venv
-uv sync
+% conda env create -f environment.yml
 ```
 
-Compile this repo as a module on the local:
+### UV for no-sys-dependent packages
 
 ```sh
-pip install -e .
+% uv venv
+% uv add -r requirements.txt
+```
+
+### [Optional] Compile as a module
+
+```sh
+% pip install -e .
 ```
 
 ## Train and Validate
+
+```sh
+% pyhon src/main.py
+```
 
 <!--
 [TODO] Add arg parsing 
@@ -46,8 +60,10 @@ nanogpt train
 ```
 -->
 
+### After optional local compile
+
 ```sh
-nanogpt
+% nanogpt
 ```
 
 ## Sample
